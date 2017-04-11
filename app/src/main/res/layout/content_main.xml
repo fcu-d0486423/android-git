@@ -61,9 +61,11 @@
         android:text="Login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/Lgin"
         android:layout_below="@+id/linearLayout"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/Lgin" />
+        android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp" />
 
 </RelativeLayout>
