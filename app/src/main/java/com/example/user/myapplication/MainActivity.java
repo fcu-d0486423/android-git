@@ -1,5 +1,6 @@
 package com.example.user.myapplication;
 
+import android.app.ListActivity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,15 +9,26 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class MainActivity extends ListActivity {
+
+    FileProcess fp;
+    boolean bSDCard = false; // true;
+    EditText ed_search;
+    Button btn_add;
+    ListView lv_store;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -26,7 +38,33 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        fp = new FileProcess(this, bSDCard);
+
+        ed_search = (EditText)findViewById(R.id.ed_search);
+        btn_add = (Button)findViewById(R.id.btn_add);
+        btn_add.setOnClickListener(addClick);
+
+        lv_store = (ListView)findViewById(android.R.id.list);
+
+        ArrayList<String> storelist = new ArrayList<String>();
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_list_item_1,
+                storelist);
+
+        lv_store.setAdapter(adapter);
     }
+
+
+    View.OnClickListener addClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+        }
+    };
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -48,5 +86,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onResume() {
+        super.onResume();
+
+        ArrayList<String> notelist = fp.getStoreList();
+        ArrayAdapter<String> adapter =new ArrayAdapter<String>
+                (this, android.R.layout.simple_list_item_1, notelist);
+        lv_store.setAdapter(adapter);
     }
 }
