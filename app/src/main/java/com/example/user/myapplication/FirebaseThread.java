@@ -29,6 +29,8 @@ public class FirebaseThread extends Thread {
     private DataSnapshot dataSnapshot;
     private HotelArrayAdapter adapter = null;
     private static final int LIST_HOTELS = 1;
+    private int mode;
+    private String storeName;
 
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
@@ -48,38 +50,83 @@ public class FirebaseThread extends Thread {
     }
 
 
-    public FirebaseThread(DataSnapshot dataSnapshot, HotelArrayAdapter adapter) {
+    public FirebaseThread(DataSnapshot dataSnapshot, HotelArrayAdapter adapter,int mode) {
         this.dataSnapshot = dataSnapshot;
         this.adapter = adapter;
+        this.mode = mode; //1= normal , 2 = search , 3 = detail
+    }
+
+    public FirebaseThread(DataSnapshot dataSnapshot, HotelArrayAdapter adapter,int mode,String storeName) {
+        this.dataSnapshot = dataSnapshot;
+        this.adapter = adapter;
+        this.mode = mode; //1= normal , 2 = search , 3 = detail
+        this.storeName = storeName;
     }
 
     public void run() {
         List<Hotel> lsHotels = new ArrayList<>();
-        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-            DataSnapshot dsSAdd = ds.child("Address");
-            DataSnapshot dsSName = ds.child("Name");
+        switch(mode) {
+            case 1:
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    DataSnapshot dsSAdd = ds.child("Address");
+                    DataSnapshot dsSName = ds.child("Name");
 
-            String add = (String) dsSAdd.getValue();
-            String name = (String) dsSName.getValue();
+                    String add = (String) dsSAdd.getValue();
+                    String name = (String) dsSName.getValue();
 
-            DataSnapshot dsImg = ds.child("PicURL");
-            String imgUrl = (String) dsImg.getValue();
-            Bitmap hotelImg = getImgBitmap(imgUrl);
+                    DataSnapshot dsImg = ds.child("PicURL");
+                    String imgUrl = (String) dsImg.getValue();
+                    Bitmap hotelImg = getImgBitmap(imgUrl);
 
-            Hotel aHotel = new Hotel();
-            aHotel.setAddress(add);
-            aHotel.setName(name);
-            aHotel.setImgUrl(hotelImg);
-            lsHotels.add(aHotel);
-            Log.v("AdoptPet", add + ";" + name);
+                    Hotel aHotel = new Hotel();
+                    aHotel.setAddress(add);
+                    aHotel.setName(name);
+                    aHotel.setImgUrl(hotelImg);
+                    lsHotels.add(aHotel);
+                    Log.v("AdoptPet", add + ";" + name);
 
-            Message msg = new Message();
-            msg.what = LIST_HOTELS;
-            msg.obj = lsHotels;
-            handler.sendMessage(msg);
+                    Message msg = new Message();
+                    msg.what = LIST_HOTELS;
+                    msg.obj = lsHotels;
+                    handler.sendMessage(msg);
+                }
+                break;
+            case 2:
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    DataSnapshot dsSName = ds.child("Name");
+                    String name = (String) dsSName.getValue();
+                    if(name.contains(storeName)) {
+                        DataSnapshot dsSAdd = ds.child("Address");
+                        String add = (String) dsSAdd.getValue();
+
+
+                        DataSnapshot dsImg = ds.child("PicURL");
+                        String imgUrl = (String) dsImg.getValue();
+                        Bitmap hotelImg = getImgBitmap(imgUrl);
+
+                        Hotel aHotel = new Hotel();
+                        aHotel.setAddress(add);
+                        aHotel.setName(name);
+                        aHotel.setImgUrl(hotelImg);
+                        lsHotels.add(aHotel);
+                        Log.v("AdoptPet", add + ";" + name);
+
+                        Message msg = new Message();
+                        msg.what = LIST_HOTELS;
+                        msg.obj = lsHotels;
+                        handler.sendMessage(msg);
+                    }
+                    else
+                        continue;
+                }
+                break;
+            case 3:
+                break;
+
 
         }
     }
+
 
     private Bitmap getImgBitmap(String imgUrl) {
         try {

@@ -26,11 +26,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends ListActivity {
 
-    FileProcess fp;
-    boolean bSDCard = false; // true;
     EditText ed_search;
-    Button btn_add;
-    ListView lv_store;
+    Button btn_search;
     HotelArrayAdapter adapter;
 
     @Override
@@ -39,12 +36,27 @@ public class MainActivity extends ListActivity {
         setContentView(R.layout.activity_main);
 
         ListView lvHotels = (ListView)findViewById(android.R.id.list);
+        ed_search = (EditText)findViewById(R.id.ed_search);
+        btn_search = (Button)findViewById(R.id.btn_search);
+        btn_search.setOnClickListener(searchListener);
 
         adapter = new HotelArrayAdapter(this, new ArrayList<Hotel>());
         lvHotels.setAdapter(adapter);
 
         getHotelFromFirebase();
     }
+
+    View.OnClickListener searchListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent();
+            String storeName = ed_search.getText().toString();
+            intent.setClass(MainActivity.this,SearchResult.class);
+            intent.putExtra("KEY_NAME",storeName);
+            startActivity(intent);
+        }
+    };
+
 
     private void getHotelFromFirebase() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -53,13 +65,13 @@ public class MainActivity extends ListActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                new FirebaseThread(dataSnapshot, adapter).start();
+                new FirebaseThread(dataSnapshot, adapter,1).start();
 
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.v("AdoptPet", databaseError.getMessage());
+                Log.v("android-git", databaseError.getMessage());
             }
         });
     }
@@ -81,7 +93,7 @@ public class MainActivity extends ListActivity {
 
         fp = new FileProcess(this, bSDCard);
 
-        ed_search = (EditText)findViewById(R.id.ed_search);
+
 
         lv_store = (ListView)findViewById(android.R.id.list);
 

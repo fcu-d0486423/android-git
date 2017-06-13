@@ -21,6 +21,10 @@
         <activity
             android:name=".StoreAdd"
             android:label="@string/title_activity_store_add"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SearchResult"
+            android:label="@string/title_activity_search_result"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
