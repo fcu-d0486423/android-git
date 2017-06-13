@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +15,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -24,9 +31,41 @@ public class MainActivity extends ListActivity {
     EditText ed_search;
     Button btn_add;
     ListView lv_store;
+    HotelArrayAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        ListView lvHotels = (ListView)findViewById(android.R.id.list);
+
+        adapter = new HotelArrayAdapter(this, new ArrayList<Hotel>());
+        lvHotels.setAdapter(adapter);
+
+        getHotelFromFirebase();
+    }
+
+    private void getHotelFromFirebase() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("");
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                new FirebaseThread(dataSnapshot, adapter).start();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.v("AdoptPet", databaseError.getMessage());
+            }
+        });
+    }
+
+    //@Override
+   /* protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -43,8 +82,6 @@ public class MainActivity extends ListActivity {
         fp = new FileProcess(this, bSDCard);
 
         ed_search = (EditText)findViewById(R.id.ed_search);
-        btn_add = (Button)findViewById(R.id.btn_add);
-        btn_add.setOnClickListener(addClick);
 
         lv_store = (ListView)findViewById(android.R.id.list);
 
@@ -56,19 +93,7 @@ public class MainActivity extends ListActivity {
                 storelist);
 
         lv_store.setAdapter(adapter);
-    }
-
-
-    View.OnClickListener addClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(MainActivity.this,StoreAdd.class);
-                intent.putExtra("SDCARD", bSDCard);
-                intent.putExtra("STORE", -1);
-                startActivity(intent);
-        }
-    };
+    }*/
 
 
     @Override
@@ -93,12 +118,12 @@ public class MainActivity extends ListActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void onResume() {
+    /*public void onResume() {
         super.onResume();
 
         ArrayList<String> notelist = fp.getStoreList();
         ArrayAdapter<String> adapter =new ArrayAdapter<String>
                 (this, android.R.layout.simple_list_item_1, notelist);
         lv_store.setAdapter(adapter);
-    }
+    }*/
 }
