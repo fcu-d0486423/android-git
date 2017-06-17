@@ -15,6 +15,7 @@ public class Hotel {
     private String address;
     private String name;
     private Bitmap imgUrl;
+    private  String detail;
 
     public String getAddress() {
         return address;
@@ -38,5 +39,13 @@ public class Hotel {
 
     public void setImgUrl(Bitmap imgUrl) {
         this.imgUrl = imgUrl;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 }

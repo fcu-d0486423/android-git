@@ -63,6 +63,7 @@ public class FirebaseThread extends Thread {
         this.storeName = storeName;
     }
 
+
     public void run() {
         List<Hotel> lsHotels = new ArrayList<>();
         switch(mode) {
@@ -120,10 +121,6 @@ public class FirebaseThread extends Thread {
                         continue;
                 }
                 break;
-            case 3:
-                break;
-
-
         }
     }
 

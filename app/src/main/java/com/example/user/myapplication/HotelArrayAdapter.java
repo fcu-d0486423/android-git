@@ -46,6 +46,8 @@ public class HotelArrayAdapter extends ArrayAdapter<Hotel> {
         tvAdd.setText(item.getAddress());
         ImageView ivHotel = (ImageView) itemlayout.findViewById(R.id.imgv_hotel);
         ivHotel.setImageBitmap(item.getImgUrl());
+        TextView tvDetail =(TextView) itemlayout.findViewById(R.id.tv_storeContent2);
+        tvDetail.setText(item.getDetail());
         return itemlayout;
     }
 }

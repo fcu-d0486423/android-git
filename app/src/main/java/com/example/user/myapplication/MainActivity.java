@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,7 +40,7 @@ public class MainActivity extends ListActivity {
         ed_search = (EditText)findViewById(R.id.ed_search);
         btn_search = (Button)findViewById(R.id.btn_search);
         btn_search.setOnClickListener(searchListener);
-
+        lvHotels.setOnItemClickListener(iclick);
         adapter = new HotelArrayAdapter(this, new ArrayList<Hotel>());
         lvHotels.setAdapter(adapter);
 
@@ -53,6 +54,19 @@ public class MainActivity extends ListActivity {
             String storeName = ed_search.getText().toString();
             intent.setClass(MainActivity.this,SearchResult.class);
             intent.putExtra("KEY_NAME",storeName);
+            startActivity(intent);
+        }
+    };
+
+    AdapterView.OnItemClickListener iclick = new AdapterView.OnItemClickListener() {
+
+        @Override
+        public void onItemClick(AdapterView<?> av, View v,
+                                int position, long id) {
+            Intent intent = new Intent();
+            intent.setClass(MainActivity.this,
+                    ShowDetail.class);
+            intent.putExtra("POSITION",position);
             startActivity(intent);
         }
     };
