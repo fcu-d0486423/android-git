@@ -84,13 +84,16 @@ public class FirebaseThread extends Thread {
                     aHotel.setName(name);
                     aHotel.setImgUrl(hotelImg);
                     lsHotels.add(aHotel);
-                    Log.v("AdoptPet", add + ";" + name);
 
+                    Log.v("AdoptPet", add + ";" + name);
                     Message msg = new Message();
                     msg.what = LIST_HOTELS;
                     msg.obj = lsHotels;
                     handler.sendMessage(msg);
+
+
                 }
+
                 break;
             case 2:
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -111,17 +114,20 @@ public class FirebaseThread extends Thread {
                         aHotel.setImgUrl(hotelImg);
                         lsHotels.add(aHotel);
                         Log.v("AdoptPet", add + ";" + name);
-
                         Message msg = new Message();
                         msg.what = LIST_HOTELS;
                         msg.obj = lsHotels;
                         handler.sendMessage(msg);
+
+
                     }
                     else
                         continue;
                 }
                 break;
         }
+
+
     }
 
 

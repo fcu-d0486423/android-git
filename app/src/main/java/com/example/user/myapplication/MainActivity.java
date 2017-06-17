@@ -27,6 +27,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends ListActivity {
 
+    ListView lvHotels;
     EditText ed_search;
     Button btn_search;
     HotelArrayAdapter adapter;
@@ -36,16 +37,34 @@ public class MainActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ListView lvHotels = (ListView)findViewById(android.R.id.list);
-        ed_search = (EditText)findViewById(R.id.ed_search);
-        btn_search = (Button)findViewById(R.id.btn_search);
+        lvHotels = (ListView) findViewById(android.R.id.list);
+        ed_search = (EditText) findViewById(R.id.ed_search);
+        btn_search = (Button) findViewById(R.id.btn_search);
         btn_search.setOnClickListener(searchListener);
-        lvHotels.setOnItemClickListener(iclick);
         adapter = new HotelArrayAdapter(this, new ArrayList<Hotel>());
         lvHotels.setAdapter(adapter);
-
+        //lvHotels.setOnItemClickListener(iclick);
         getHotelFromFirebase();
-    }
+
+
+        lvHotels.setOnClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> av, View v, int position, long id) {
+
+
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this, ShowDetail.class);
+                intent.putExtra("STORE", position);
+                startActivity(intent);
+
+
+            }
+
+            setContentView(lvHotels);
+
+        });
+
+}
 
     View.OnClickListener searchListener = new View.OnClickListener() {
         @Override
@@ -58,7 +77,7 @@ public class MainActivity extends ListActivity {
         }
     };
 
-    AdapterView.OnItemClickListener iclick = new AdapterView.OnItemClickListener() {
+   /* AdapterView.OnItemClickListener iclick = new AdapterView.OnItemClickListener() {
 
         @Override
         public void onItemClick(AdapterView<?> av, View v,
@@ -69,7 +88,7 @@ public class MainActivity extends ListActivity {
             intent.putExtra("POSITION",position);
             startActivity(intent);
         }
-    };
+    };*/
 
 
     private void getHotelFromFirebase() {
