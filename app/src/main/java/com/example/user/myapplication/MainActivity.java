@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,9 +43,23 @@ public class MainActivity extends ListActivity {
 
         adapter = new HotelArrayAdapter(this, new ArrayList<Hotel>());
         lvHotels.setAdapter(adapter);
-
+        lvHotels.setOnItemClickListener(iclick);
         getHotelFromFirebase();
+
+
+
     }
+
+    AdapterView.OnItemClickListener iclick = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            Intent intent = new Intent();
+            intent.setClass(MainActivity.this,ShowDetail.class);
+            intent.putExtra("STORE",position);
+            startActivity(intent);
+        }
+    };
 
     View.OnClickListener searchListener = new View.OnClickListener() {
         @Override
@@ -56,6 +71,8 @@ public class MainActivity extends ListActivity {
             startActivity(intent);
         }
     };
+
+
 
 
     private void getHotelFromFirebase() {
@@ -75,6 +92,9 @@ public class MainActivity extends ListActivity {
             }
         });
     }
+
+
+
 
     //@Override
    /* protected void onCreate(Bundle savedInstanceState) {
